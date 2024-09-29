@@ -1,4 +1,4 @@
-package com.andrearozaki.urlshortener.dto;
+package com.andrearozaki.urlshortener.dto.response;
 
 import lombok.Getter;
 
