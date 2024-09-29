@@ -53,7 +53,6 @@ public class UrlMappingIntegrationTest {
         // Save the URL using the service
         urlService.createUrlMapping(firstUrlRequestDTO);
         urlService.createUrlMapping(secondUrlRequestDTO);
-
         List<UrlEntity> urls = mongoTemplate.findAll(UrlEntity.class);
 
         // Verify the results
