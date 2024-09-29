@@ -12,5 +12,4 @@ public class UrlResponseDTO {
     private final String longUrl;
     private final LocalDateTime creationDate;
 
-
 }
