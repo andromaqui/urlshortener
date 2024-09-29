@@ -2,20 +2,21 @@ package com.andrearozaki.urlshortener.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 
-@Entity
+@Document(collection = "url_mappings")
 @Data
 public class UrlEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(unique = true, nullable = false)
+    @Indexed(unique = true)
     private String shortUrl;
 
-    @Column(nullable = false)
     private String longUrl;
 
     private LocalDateTime creationDate;
