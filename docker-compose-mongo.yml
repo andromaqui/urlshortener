@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo-network
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  mongo-network:
+    driver: bridge
