@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.cache.CacheManager;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -32,11 +33,14 @@ class UrlServiceTest {
     @Mock
     private UrlEncoder urlEncoder;
 
+    @Mock
+    private CacheManager cacheManager;
+
     private UrlRequestDTO urlRequestDTO;
     private UrlEntity urlEntity;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         urlRequestDTO = new UrlRequestDTO();
         urlRequestDTO.setLongUrl("https://www.example.com");
@@ -48,7 +52,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void testCreateUrlMapping_Success() {
+    public void testCreateUrlMapping_Success() {
         when(urlEncoder.encodeUrl(anyString(), any(LocalDateTime.class))).thenReturn("encodedShortUrl");
         when(repository.save(any(UrlEntity.class))).thenReturn(urlEntity);
 
@@ -63,7 +67,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void testCreateUrlMapping_Exception() {
+    public void testCreateUrlMapping_Exception() {
         when(repository.save(any(UrlEntity.class))).thenThrow(new RuntimeException("Database error"));
 
         UrlShortenerRuntimeException thrown = assertThrows(UrlShortenerRuntimeException.class, () -> {
@@ -74,7 +78,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void testGetLongUrl_Success() {
+    public void testGetLongUrl_Success() {
         when(repository.findByShortUrl("encodedShortUrl")).thenReturn(Optional.of(urlEntity));
 
         UrlResponseDTO response = urlService.getLongUrl("encodedShortUrl");
@@ -87,7 +91,7 @@ class UrlServiceTest {
     }
 
     @Test
-    void testGetLongUrl_NotFound() {
+    public void testGetLongUrl_NotFound() {
         when(repository.findByShortUrl("nonExistingShortUrl")).thenReturn(Optional.empty());
 
         UrlNotFoundException thrown = assertThrows(UrlNotFoundException.class, () -> {
