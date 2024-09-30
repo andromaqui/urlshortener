@@ -2,15 +2,15 @@
 
 The goal of the URL shortener application is to enable users to easily convert long URLs into automatically generated short URLs, streamlining the process of sharing and managing links without the need for custom short URL options. The application efficiently generates unique short URLs for users, simplifying link sharing and enhancing overall usability.
 
-Here’s a more concise overview of the features that make your URL shortener application production-ready:
+The app does not handle the expiry or deletion of the urls, but this is a step which could be added in following iterations.
 
 Here’s a more concise overview of the features that make your URL shortener application production-ready:
- 1. Endpoints: Well-defined RESTful APIs for shortening and retrieving URLs, facilitating easy integration and usability. 
- 2. Custom Exception Handling: Custom exceptions and a global exception handler provide clear error responses, enhancing user experience during failures.
- 3. Spring Actuator: Enables monitoring and management of the application with endpoints for health checks and metrics, ensuring operational reliability.
- 4. Spring Profiles: Allows different configurations for various environments (development, testing, production), reducing risks during deployment.
- 5. Caching: Improves performance by storing frequently accessed data, reducing database load and enhancing response times for users.
- 6. Dockerfile: The Dockerfile defines the steps to build a Docker image for the URL shortener application, specifying the base images, dependencies, and configuration needed to run the application in a containerized environment.
+ 1. `Endpoints`: Well-defined RESTful APIs for shortening and retrieving URLs, facilitating easy integration and usability. 
+ 2. `Custom Exception Handling`: Custom exceptions and a global exception handler provide clear error responses, enhancing user experience during failures.
+ 3. `Spring Actuator`: Enables monitoring and management of the application with endpoints for health checks and metrics, ensuring operational reliability.
+ 4. `Spring Profiles`: Allows different configurations for various environments (development, testing, production), reducing risks during deployment.
+ 5. `Caching`: Improves performance by storing frequently accessed data, reducing database load and enhancing response times for users.
+ 6. `Dockerfile`: The Dockerfile defines the steps to build a Docker image for the URL shortener application, specifying the base images, dependencies, and configuration needed to run the application in a containerized environment.
 
 ## Building Url Shortener
 
@@ -29,14 +29,14 @@ mvn clean install -DskipTests
 ## Development Setup
 
 ## Docker
-Url Shortener uses MongoDB as a database to store data. While the url and the port of the database can be altered via the `application-dev.properties` file, by default the app expects to find a MongoDB instance on `localhost:27017`.
+This app uses MongoDB as a database to store data. While the url and the port of the database can be altered via the `application-dev.properties` file, by default the app expects to find a MongoDB instance on `localhost:27017`.
 In order to quickly have a MongoDB up and running you can install Docker and run the following command:
 
 ```
 docker-compose -f docker-compose-mongo.yml up -d
 ```
 
-This will pull the MongoDB version `7.0.0` and run it on `localhost:27017`.
+This will pull the MongoDB version `7.0.0` and start a container on `localhost:27017`.
 
 
 ## Spring Profile Configuration
@@ -45,7 +45,7 @@ The are currently 3 different spring profiles defined:
 - `Stage` profile for which the config for can be found in `application-stage.properties`
 - `Prod` profile for which the config for can be found in `application-prod.properties`
 
-The default profile is set in application.properties to be dev. If you which to switch to a different profile, make sure you adjust the configuration in each of the `application-*.properties` file.
+The default profile is set in `application.properties` to be dev. If you which to switch to a different profile, make sure you adjust the configuration in each of the `application-*.properties` file.
 
 
 ## Architecture
@@ -75,7 +75,7 @@ Caffeine is a high-performance, in-memory caching library for Java. URL shortene
 
 #### Disadvantages
  1. **Memory Usage**: Cached data occupies memory, which may lead to increased resource consumption, especially with large datasets.
- 2. **Stale Data**: Cached entries may become outdated if not managed correctly, potentially serving stale data to users.
+ 2. **Stale Data**: Cached entries may become outdated if not managed correctly, potentially serving stale data to users. Currently there isnt such threat since we are deleting any data, but this is a consideration we should make as we enrich the app with more endpoints.
 
 ### Database
 
@@ -85,17 +85,17 @@ The NoSQL database MongoDB was chosen for the URL shortener application primaril
 
 The schema for the URL shortener application using a NoSQL database (like `MongoDB`) is represented by the `UrlEntity` class, which corresponds to the url_mappings collection. Here’s a breakdown of the fields:
 
-`id`: Unique identifier for each URL mapping (automatically generated by the database).
-`shortUrl`: The shortened URL that maps to the long URL, indexed for quick retrieval and must be unique.
-`longUrl`: The original URL that the shortened version points to.
-`creationDate`: Timestamp indicating when the mapping was created.
+1. `id`: Unique identifier for each URL mapping (automatically generated by the database).
+2. `shortUrl`: The shortened URL that maps to the long URL, indexed for quick retrieval and must be unique.
+3. `longUrl`: The original URL that the shortened version points to.
+4. `creationDate`: Timestamp indicating when the mapping was created.
 
 ### Actuator
 
 Actuator exposes the endpoints health, info and prometheus which are crucial for monitoring Spring Boot applications.
  1. The health endpoint `(/actuator/health)` provides real-time status information, allowing teams to quickly assess application health and troubleshoot issues.
  2. The info endpoint `(/actuator/info)` exposes metadata about the application, such as its version and build details, which aids in tracking deployments and understanding application context.
- 3. prometheus endpoint `(/actuator/prometheus)` facilitates the collection of application metrics for performance monitoring, enabling teams to analyze data and optimize resource usage effectively. Together, these endpoints support proactive management and enhance operational visibility .
+ 3. The prometheus endpoint `(/actuator/prometheus)` facilitates the collection of application metrics for performance monitoring, enabling teams to analyze data and optimize resource usage effectively. Together, these endpoints support proactive management and enhance operational visibility .
 
 ### TODO 
 - [ ] Implement CI/CD.
