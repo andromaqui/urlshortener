@@ -2,6 +2,8 @@
 
 The goal of the URL shortener application is to enable users to easily convert long URLs into automatically generated short URLs, streamlining the process of sharing and managing links without the need for custom short URL options. The application efficiently generates unique short URLs for users, simplifying link sharing and enhancing overall usability.
 
+The app does not handle the expiry or deletion of the urls, but this is a step which could be added in following iterations.
+
 Here’s a more concise overview of the features that make your URL shortener application production-ready:
  1. `Endpoints`: Well-defined RESTful APIs for shortening and retrieving URLs, facilitating easy integration and usability. 
  2. `Custom Exception Handling`: Custom exceptions and a global exception handler provide clear error responses, enhancing user experience during failures.
