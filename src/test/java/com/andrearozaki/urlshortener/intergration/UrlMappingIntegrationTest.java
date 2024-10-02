@@ -90,15 +90,15 @@ public class UrlMappingIntegrationTest {
         UrlResponseDTO createdUrl = urlService.createUrlMapping(urlRequestDTO);
 
         // Step 2: Retrieve it using getLongUrl (first call - should hit the database)
-        UrlResponseDTO firstCallResponse = urlService.getLongUrl(createdUrl.getShortUrl());
-        assertEquals("https://example.com", firstCallResponse.getLongUrl());
+        String firstCallResponse = urlService.getLongUrlOrThrow(createdUrl.getShortUrl());
+        assertEquals("https://example.com", firstCallResponse);
 
         // Verify that repository was called exactly once for the first DB hit
         verify(repository, times(1)).findByShortUrl(createdUrl.getShortUrl());
 
         // Step 3: Make a second call to getLongUrl (should hit the cache)
-        UrlResponseDTO secondCallResponse = urlService.getLongUrl(createdUrl.getShortUrl());
-        assertEquals("https://example.com", secondCallResponse.getLongUrl());
+        String secondCallResponse = urlService.getLongUrlOrThrow(createdUrl.getShortUrl());
+        assertEquals("https://example.com", secondCallResponse);
 
         // Verify that repository was not called again (cache should handle it)
         verify(repository, times(1)).findByShortUrl(createdUrl.getShortUrl()); // Still 1 call, no additional hit
