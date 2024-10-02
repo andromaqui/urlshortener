@@ -2,6 +2,7 @@ package com.andrearozaki.urlshortener.controller;
 
 import com.andrearozaki.urlshortener.dto.request.UrlRequestDTO;
 import com.andrearozaki.urlshortener.dto.response.UrlResponseDTO;
+import com.andrearozaki.urlshortener.exception.UrlNotFoundException;
 import com.andrearozaki.urlshortener.service.UrlService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +32,8 @@ public class UrlController {
 
     @GetMapping("/{shortUrl}")
     public ResponseEntity<Void> redirect(@PathVariable String shortUrl) {
-        logger.info("Retrieving long URL for short URL: {}", shortUrl);
-        UrlResponseDTO urlResponseDTO = urlService.getLongUrl(shortUrl);
-
-        if (urlResponseDTO == null || urlResponseDTO.getLongUrl() == null) {
-            logger.warn("No long URL found for short URL: {}", shortUrl);
-            return ResponseEntity.notFound().build();
-        }
-
-        String longUrl = urlResponseDTO.getLongUrl();
+        logger.info("Processing redirection request for short URL: {}", shortUrl);
+        String longUrl = urlService.getLongUrlOrThrow(shortUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(longUrl));
         logger.info("Redirecting to long URL: {}", longUrl);
@@ -47,4 +41,5 @@ public class UrlController {
                 .headers(headers)
                 .build();
     }
+
 }

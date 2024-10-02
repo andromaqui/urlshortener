@@ -49,14 +49,12 @@ public class UrlService {
         }
     }
 
-    @Cacheable(value = "urlcache", key="{#shortUrl}")
-    public UrlResponseDTO getLongUrl(String shortUrl) {
-        logger.info("Retrieving long URL for short URL: {}", shortUrl);
-        Optional<UrlEntity> optionalUrl = repository.findByShortUrl(shortUrl);
-        if (optionalUrl.isPresent()) {
-            UrlEntity existentURL = optionalUrl.get();
-            logger.debug("Found long URL: {}", existentURL.getLongUrl());
-            return new UrlResponseDTO(existentURL.getShortUrl(), existentURL.getLongUrl(), existentURL.getCreationDate());
+    @Cacheable(value = "urlcache", key = "{#shortUrl}")
+    public String getLongUrlOrThrow(String shortUrl) {
+        Optional<UrlEntity> optionalUrlEntity = repository.findByShortUrl(shortUrl);
+
+        if (optionalUrlEntity.isPresent()) {
+            return optionalUrlEntity.get().getLongUrl();
         } else {
             logger.warn("Short URL not found: {}", shortUrl);
             throw new UrlNotFoundException(shortUrl);

@@ -81,11 +81,10 @@ class UrlServiceTest {
     public void testGetLongUrl_Success() {
         when(repository.findByShortUrl("encodedShortUrl")).thenReturn(Optional.of(urlEntity));
 
-        UrlResponseDTO response = urlService.getLongUrl("encodedShortUrl");
+        String response = urlService.getLongUrlOrThrow("encodedShortUrl");
 
         assertNotNull(response);
-        assertEquals("encodedShortUrl", response.getShortUrl());
-        assertEquals("https://www.example.com", response.getLongUrl());
+        assertEquals("https://www.example.com", response);
 
         verify(repository, times(1)).findByShortUrl("encodedShortUrl");
     }
@@ -95,7 +94,7 @@ class UrlServiceTest {
         when(repository.findByShortUrl("nonExistingShortUrl")).thenReturn(Optional.empty());
 
         UrlNotFoundException thrown = assertThrows(UrlNotFoundException.class, () -> {
-            urlService.getLongUrl("nonExistingShortUrl");
+            urlService.getLongUrlOrThrow("nonExistingShortUrl");
         });
 
         assertEquals("URL not found: nonExistingShortUrl", thrown.getMessage());
